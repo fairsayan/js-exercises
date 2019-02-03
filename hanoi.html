@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Hanoi</title>
+  <meta charset="utf-8" />
+</head>
+<body>
+
+<script>
+  var env = [[1, 2, 3, 4], [], []]
+  hanoi(0, 2, 4, env)
+  console.info(env, 'Finito!!!')
+
+  function hanoi(sourceIndex, destIndex, elementsToMove, state) {
+    var transitionIndex = getTransitionIndex(sourceIndex, destIndex)
+
+    var sourcePile = state[ sourceIndex ]
+    var destPile = state[ destIndex ]
+    var transitionPile = state[ destIndex ]
+
+    switch(elementsToMove) {
+      case 0:
+        break
+      case 1:
+        console.info(`${sourcePile[0]}: ${sourceIndex} -> ${destIndex}`)
+        destPile.unshift(sourcePile[0])
+        sourcePile.shift()
+        break
+      default:
+        hanoi(sourceIndex, transitionIndex, elementsToMove - 1, state)
+        hanoi(sourceIndex, destIndex, 1, state)
+        hanoi(transitionIndex, destIndex, elementsToMove - 1, state)
+    }
+  }
+
+  function getTransitionIndex(idx1, idx2) {
+    var options = new Set([0, 1, 2])
+
+    options.delete(idx1)
+    options.delete(idx2)
+
+    return Array.from(options)[0]
+  }
+
+</script>
+
+</body>
+</html>

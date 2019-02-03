@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Hanoi graphic</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="bootstrap-4.2.1-dist/css/bootstrap.min.css">
+  <style>
+    .disc {
+      margin: auto;
+      background-color: cyan;
+      border-color: blue;
+      color: gray;
+    }
+    .disc1 { width: 50px; }
+    .disc2 { width: 100px; }
+    .disc3 { width: 150px; }
+    .disc4 { width: 200px; }
+    .disc5 { width: 250px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row text-center align-items-end" style="height: 250px">
+    <div id="pile0" class="col-4 pile"></div>
+    <div id="pile1" class="col-4 pile"></div>
+    <div id="pile2" class="col-4 pile"></div>
+  </div>
+</div>
+<script src="jquery-3.3.1.js"></script>
+<script>
+  var env = [[1, 2, 3, 4, 5], [], []]
+  var historyState = [JSON.parse( JSON.stringify(env) )]
+  hanoi(0, 2, 5, env, historyState)
+  console.info(env, 'Finito!!!')
+  stateMovie(historyState)
+
+  function hanoi(sourceIndex, destIndex, elementsToMove, state, historyState) {
+    var transitionIndex = getTransitionIndex(sourceIndex, destIndex)
+
+    var sourcePile = state[ sourceIndex ]
+    var destPile = state[ destIndex ]
+    var transitionPile = state[ destIndex ]
+
+    switch(elementsToMove) {
+      case 0:
+        break
+      case 1:
+        console.info(`${sourcePile[0]}: ${sourceIndex} -> ${destIndex}`)
+        destPile.unshift(sourcePile[0])
+        sourcePile.shift()
+        historyState.push( JSON.parse( JSON.stringify(state) ) )
+        break
+      default:
+        hanoi(sourceIndex, transitionIndex, elementsToMove - 1, state, historyState)
+        hanoi(sourceIndex, destIndex, 1, state, historyState)
+        hanoi(transitionIndex, destIndex, elementsToMove - 1, state, historyState)
+    }
+  }
+
+  function getTransitionIndex(idx1, idx2) {
+    var options = new Set([0, 1, 2])
+
+    options.delete(idx1)
+    options.delete(idx2)
+
+    return Array.from(options)[0]
+  }
+
+  function stateMovie(historyState) {
+    var step = 0
+    var interval = setInterval(() => {
+      drawState(historyState[step++])
+      if (step >= historyState.length) clearInterval(interval)
+    }, 800)
+  }
+
+  function drawState(state) {
+    for (var i in state) {
+      let pile = '#pile' + i
+      $(pile).empty()
+      for (var j in state[i]) {
+        let str = `<div class="disc${state[i][j]} disc">${state[i][j]}</div>`
+        $(pile).append(str)
+      }
+        
+    }
+  }
+
+</script>
+</body>
+</html>
