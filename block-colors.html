@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Block colors</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="bootstrap-4.2.1-dist/css/bootstrap.min.css">
+  <style>
+    #block {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="block"></div>
+  <button>Change color</button>
+<script src="jquery-3.3.1.js"></script>
+<script>
+  var color = 'red'
+  function changeColor(e) {
+    color = (color === 'red') ? 'blue' : 'red'
+    $('#block').css('background-color', color)
+  }
+
+  document.addEventListener('click', changeColor)
+</script>
+
+</script>
+</body>
+</html>

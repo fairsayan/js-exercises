@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Semaforo</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="bootstrap-4.2.1-dist/css/bootstrap.min.css">
+  <style>
+    .td {
+      width: 50px;
+      height: 50px;
+      border: 1px solid gray;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <div id="alert" class="alert alert-warning alert-dismissible" role="alert"></div>
+  <table>
+    <tr>
+      <td id="td00" class="td"></td>
+      <td id="td01" class="td"></td>
+      <td id="td02" class="td"></td>
+    </tr>
+    <tr>
+      <td id="td10" class="td"></td>
+      <td id="td11" class="td"></td>
+      <td id="td12" class="td"></td>
+    </tr>
+    <tr>
+      <td id="td20" class="td"></td>
+      <td id="td21" class="td"></td>
+      <td id="td22" class="td"></td>
+    </tr>
+  </table>
+  </div>
+<script src="jquery-3.3.1.js"></script>
+<script src="bootstrap-4.2.1-dist/js/bootstrap.js"></script>
+<script>
+  var currentPlayer = 'x'
+  const types = ['row', 'col', 'diag']
+
+  $('#alert').hide()
+
+  function getTriple(type, pos) {
+    var cells = $('td')
+    var result = []
+    for (var i = 0; i < cells.length; i++) {
+      let row = parseInt(cells[i].id[2])
+      let col = parseInt(cells[i].id[3])
+      let toAdd = false
+
+      switch (type) {
+        case 'row':
+          if (pos === row) toAdd = true
+          break
+        case 'col':
+          if (pos === col) toAdd = true
+          break
+        case 'diag':
+          if (pos === 0 && row === col) toAdd = true
+          if (pos === 1 && row === 2 - col) toAdd = true
+          break
+      }
+      if (toAdd) result.push(cells[i])
+    }
+
+    return result
+  }
+
+  function isWinningTriple(type, pos) {
+    var triple = getTriple(type, pos)
+    var val1 = $(triple[0]).text()
+    var val2 = $(triple[1]).text()
+    var val3 = $(triple[2]).text()
+    return (val1 && val1 === val2 && val2 === val3) ? val1 : false
+  }
+
+  function checkEnd() {
+    for (var type of types) {
+      for (var pos = 0; pos <= 3; pos++) {
+        if (type === 'diag' && pos === 3) continue
+        let winner = isWinningTriple(type, pos)
+        if (winner) {
+          $('#alert').text(`"${winner}" vince!`)
+          $('#alert').show()
+        }
+      }
+    }
+  }
+
+  $('td').click((e) => {
+    var value = $(e.target).text()
+    if (!value) {
+      $(e.target).text(currentPlayer)
+      currentPlayer = (currentPlayer === 'x') ? 'o' : 'x'
+      checkEnd()
+    } else {
+      $('#alert').text('cella già occupata!')
+      $('#alert').show()
+    }
+
+  })
+</script>
+
+</script>
+</body>
+</html>
